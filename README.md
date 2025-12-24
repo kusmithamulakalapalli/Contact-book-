@@ -1,231 +1,195 @@
-# Contact-book-
-Contact book application 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Layout</title>
+    <title>Contact Book</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Contacts App</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- PWA -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1976d2">
+<div class="app">
+    <h1>📘 Contact Book</h1>
 
-<!-- Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <input type="text" id="name" placeholder="Name">
+    <input type="text" id="phone" placeholder="Phone Number">
+    <input type="email" id="email" placeholder="Email">
 
-<style>
-:root {
-    --bg: #e3f2fd;
-    --primary: #1976d2;
-    --card: #ffffff;
-    --text: #000;
-}
+    <button onclick="addContact()">➕ Add Contact</button>
 
-.dark {
-    --bg: #0d1b2a;
-    --primary: #2196f3;
-    --card: #1b263b;
-    --text: #fff;
-}
+    <input type="text" id="search" placeholder="🔍 Search Contact" onkeyup="searchContact()">
 
-* {
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
+    <ul id="contactList"></ul>
+</div>
 
+<script src="script.js"></script>
+</body>
+</html>
+<h2>📞 Call History</h2>
+
+<div class="history">
+    <h3>Dialed Calls</h3>
+    <ul id="dialedList"></ul>
+
+    <h3>Missed Calls</h3>
+    <ul id="missedList"></ul>
+</div>
 body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
+    font-family: Arial, sans-serif;
+    background: #0b3c5d;
+    color: white;
     display: flex;
     justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 .app {
-    width: 100%;
-    max-width: 400px;
-    height: 100vh;
-    background: var(--bg);
-    display: flex;
-    flex-direction: column;
-    animation: fade 0.4s ease;
+    background: #1f6f8b;
+    padding: 20px;
+    border-radius: 10px;
+    width: 320px;
 }
 
-@keyframes fade { from {opacity:0;} to{opacity:1;} }
-
-.header {
-    background: var(--primary);
-    color: white;
-    padding: 15px;
+h1 {
     text-align: center;
-    font-size: 18px;
-    position: relative;
 }
 
-.toggle { position: absolute; right: 15px; top: 15px; cursor: pointer; }
-
-.content { flex: 1; padding: 15px; overflow-y: auto; }
-
-.card {
-    background: var(--card);
-    padding: 15px;
-    border-radius: 12px;
-    margin-bottom: 15px;
-    animation: slide 0.3s ease;
+input {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: none;
 }
 
-@keyframes slide { from {transform:translateY(20px);opacity:0;} to {transform:translateY(0);opacity:1;} }
-
-input { width:100%; padding:10px; margin-top:10px; }
-button { width:100%; padding:10px; margin-top:10px; border:none; background:var(--primary); color:white; border-radius:6px; cursor:pointer; }
-.navbar { display:flex; border-top:1px solid #ccc; background:var(--card); }
-.navbar button { flex:1; background:none; border:none; padding:8px; color:var(--text);}
-.navbar button.active { color:var(--primary);}
-</style>
-</head>
-
-<body>
-
-<div class="app">
-
-<!-- LOGIN -->
-<div class="content" id="login">
-    <div class="card">
-        <i class="fa-solid fa-user-lock"></i>
-        <h3>Login</h3>
-        <input id="username" placeholder="Username">
-        <input id="password" type="password" placeholder="Password">
-        <button onclick="login()">Login</button>
-    </div>
-</div>
-
-<!-- MAIN APP -->
-<div id="main" style="display:none;">
-    <div class="header">
-        <i class="fa-solid fa-address-book"></i> Contacts App
-        <span class="toggle" onclick="toggleDark()">
-            <i class="fa-solid fa-moon"></i>
-        </span>
-    </div>
-
-    <div class="content" id="content"></div>
-
-    <div class="navbar">
-        <button class="active" onclick="searchTab(this)">
-            <i class="fa-solid fa-magnifying-glass"></i><br>Search
-        </button>
-        <button onclick="contactsTab(this)">
-            <i class="fa-solid fa-users"></i><br>Contacts
-        </button>
-        <button onclick="createTab(this)">
-            <i class="fa-solid fa-user-plus"></i><br>Create
-        </button>
-    </div>
-</div>
-
-</div>
-
-<script>
-let contacts = JSON.parse(localStorage.getItem("contacts") || "[]");
-const content = document.getElementById("content");
-
-function login() {
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    if(username && password){
-        document.getElementById("login").style.display = "none";
-        document.getElementById("main").style.display = "block";
-        searchTab(document.querySelector(".navbar button"));
-    } else { alert("Enter username and password!"); }
+button {
+    width: 100%;
+    padding: 8px;
+    background: #3282b8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-function setActive(btn){
-    document.querySelectorAll(".navbar button").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
+button:hover {
+    background: #bbe1fa;
+    color: black;
 }
 
-function toggleDark(){ document.body.classList.toggle("dark"); }
-
-function searchTab(btn){
-    setActive(btn);
-    content.innerHTML = `
-        <div class="card">
-            <h3><i class="fa-solid fa-magnifying-glass"></i> Search Contact</h3>
-            <input id="searchInput" placeholder="Search by name" oninput="filterContacts()">
-            <div id="searchResults"></div>
-        </div>`;
-    filterContacts();
+li {
+    background: #bbe1fa;
+    color: black;
+    margin: 5px 0;
+    padding: 5px;
+    border-radius: 5px;
+    list-style: none;
+}
+.history {
+    background: #0b3c5d;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
 }
 
-function filterContacts(){
-    const query = document.getElementById("searchInput").value.toLowerCase();
-    const results = contacts.filter(c=>c.name.toLowerCase().includes(query));
-    const resultsDiv = document.getElementById("searchResults");
-    if(resultsDiv){
-        if(results.length === 0){ resultsDiv.innerHTML = "<p>No contacts found.</p>"; }
-        else { resultsDiv.innerHTML = results.map(c=>`<p>• ${c.name} (${c.phone})</p>`).join(""); }
+.history h3 {
+    color: #bbe1fa;
+    font-size: 16px;
+}
+let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+let dialedCalls = JSON.parse(localStorage.getItem("dialedCalls")) || [];
+let missedCalls = JSON.parse(localStorage.getItem("missedCalls")) || [];
+
+function addContact() {
+    let name = document.getElementById("name").value;
+    let phone = document.getElementById("phone").value;
+    let email = document.getElementById("email").value;
+
+    if (name === "" || phone === "") {
+        alert("Name and Phone are required");
+        return;
     }
+
+    contacts.push({ name, phone, email, blocked: false });
+    contacts.sort((a, b) => a.name.localeCompare(b.name));
+
+    localStorage.setItem("contacts", JSON.stringify(contacts));
+    displayContacts();
 }
 
-function contactsTab(btn){
-    setActive(btn);
-    if(contacts.length===0){ content.innerHTML=`<div class="card"><h3><i class="fa-solid fa-users"></i> Contacts</h3><p>No contacts yet.</p></div>`; return;}
-    content.innerHTML = `<div class="card"><h3><i class="fa-solid fa-users"></i> Contacts</h3>${contacts.map(c=>`<p>• ${c.name} (${c.phone})</p>`).join("")}</div>`;
+function displayContacts() {
+    let list = document.getElementById("contactList");
+    list.innerHTML = "";
+
+    contacts.forEach((c, index) => {
+        let li = document.createElement("li");
+        li.innerHTML = `
+            <b>${c.name}</b><br>
+            📞 ${c.phone}<br>
+            📧 ${c.email || "N/A"}<br>
+
+            <button onclick="makeCall('${c.name}','${c.phone}')">📲 Call</button>
+            <button onclick="missCall('${c.name}','${c.phone}')">❌ Missed</button>
+            <button onclick="blockContact(${index})">
+                ${c.blocked ? "Unblock" : "Block"}
+            </button>
+        `;
+        list.appendChild(li);
+    });
+
+    displayHistory();
 }
 
-function createTab(btn){
-    setActive(btn);
-    content.innerHTML = `<div class="card">
-        <h3><i class="fa-solid fa-user-plus"></i> Create Contact</h3>
-        <input id="newName" placeholder="Name">
-        <input id="newPhone" placeholder="Phone Number">
-        <button onclick="saveContact()">Save Contact</button>
-    </div>`;
+function makeCall(name, phone) {
+    dialedCalls.unshift(`${name} - ${phone}`);
+    localStorage.setItem("dialedCalls", JSON.stringify(dialedCalls));
+    displayHistory();
+    window.location.href = `tel:${phone}`;
 }
 
-function saveContact(){
-    const name = document.getElementById("newName").value;
-    const phone = document.getElementById("newPhone").value;
-    if(name && phone){
-        contacts.push({name, phone});
-        localStorage.setItem("contacts", JSON.stringify(contacts));
-        alert("Contact saved!");
-        createTab(document.querySelector(".navbar button:last-child"));
-    } else { alert("Enter both name and phone!"); }
+function missCall(name, phone) {
+    missedCalls.unshift(`${name} - ${phone}`);
+    localStorage.setItem("missedCalls", JSON.stringify(missedCalls));
+    displayHistory();
 }
 
-// Register Service Worker
-if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js').then(()=>console.log("Service Worker Registered"));
+function displayHistory() {
+    let dialedList = document.getElementById("dialedList");
+    let missedList = document.getElementById("missedList");
+
+    dialedList.innerHTML = "";
+    missedList.innerHTML = "";
+
+    dialedCalls.forEach(call => {
+        let li = document.createElement("li");
+        li.textContent = call;
+        dialedList.appendChild(li);
+    });
+
+    missedCalls.forEach(call => {
+        let li = document.createElement("li");
+        li.textContent = call;
+        missedList.appendChild(li);
+    });
 }
-</script>
 
-</body>
-</html>
+function blockContact(index) {
+    contacts[index].blocked = !contacts[index].blocked;
+    localStorage.setItem("contacts", JSON.stringify(contacts));
+    displayContacts();
+}
 
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <section id="home">Hero content here</section>
-        <section id="about">About content</section>
-    </main>
-    <footer>Copyright info</footer>
-</body>
-</html>
+function searchContact() {
+    let value = document.getElementById("search").value.toLowerCase();
+    let list = document.getElementById("contactList");
+    list.innerHTML = "";
+
+    contacts.filter(c => c.name.toLowerCase().includes(value))
+        .forEach(c => {
+            let li = document.createElement("li");
+            li.innerHTML = `<b>${c.name}</b> - ${c.phone}`;
+            list.appendChild(li);
+        });
+}
+
+displayContacts();
